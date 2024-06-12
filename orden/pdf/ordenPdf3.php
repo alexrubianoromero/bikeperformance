@@ -41,11 +41,14 @@ $pdf->Cell(25,6,'Identificacion',1,0,'C');
 $pdf->Cell(25,6,'Telefono',1,1,'C');
 
 $pdf->Cell(80);
-$pdf->Cell(40,6,substr($datosCliente['nombre'],0,18),1,0,'C');
+$pdf->SetFont('Arial','',8);
+$pdf->Cell(40,6,substr($datosCliente['nombre'],0,16),1,0,'C');
 $pdf->Cell(25,6,$datosCliente['identi'],1,0,'C');
 $pdf->Cell(25,6,$datosCliente['telefono'],1,1,'C');
 $pdf->Cell(80);
 $pdf->Cell(90,6,$datosCliente['direccion'],1,1,'C');
+
+$pdf->SetFont('Arial','',10);
 $pdf->Cell(17);
 $pdf->Cell(22,6,'BIKE PERFORMANCE',0,0,'C');
 $pdf->Cell(41);
@@ -54,6 +57,8 @@ $pdf->Cell(17);
 $pdf->Cell(22,6,'Carrera 27 No 74A-39',0,1,'C');
 $pdf->Cell(17);
 $pdf->Cell(22,6,'Nit:79719755-7',0,1,'C');
+$pdf->Cell(17);
+$pdf->Cell(22,6,'Tel:3007301994',0,1,'C');
 
 
 $kilometraje = $datoOrden['kilometraje'];

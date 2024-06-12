@@ -33,7 +33,7 @@ class ReciboCajaModelo extends Conexion
                     ,'".$request['tipo']."'
                     ,'".$request['idTecnico']."'
                     ,'".$request['txtConcepto']."'
-                    ,'".$request['txtEfectivo']."'
+                    ,'".$request['txtEfectivo']."' 
                     ,'".$request['txtDebito']."'
                     ,'".$request['txtCredito']."'
                     ,'".$request['idOrden']."'
@@ -161,6 +161,24 @@ class ReciboCajaModelo extends Conexion
             $arreglo = mysql_fetch_assoc($consulta); 
             return $arreglo;
         }
+
+        public function traerRecibosDeCaja()
+        {
+            $sql = 'select * from recibos_de_caja order by id_recibo desc ';
+            $consulta = mysql_query($sql,$this->conexion);
+            $arreglo = $this->get_table_assoc($consulta); 
+            return $arreglo;
+        }
+        
+        public function traerReciboPorId($id)
+        {
+            $sql = "select * from recibos_de_caja where id_recibo  = '".$id."'  "; 
+            $consulta = mysql_query($sql,$this->conexion);
+            $recibo = mysql_fetch_assoc($consulta); 
+            return $recibo; 
+        }
+
+
 
 
 

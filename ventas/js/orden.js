@@ -647,6 +647,9 @@ function grabarVehiculoDesdeOrden()
             function eliminarItemOrden(idItem)
             {
                 // alert (idItem);
+            var valida = confirm('Esta seguro de eliminar este item.?');
+            if (valida)
+            {   
                 const http=new XMLHttpRequest();
                 const url = '../orden/ordenes.php';
                 http.onreadystatechange = function(){
@@ -662,6 +665,7 @@ function grabarVehiculoDesdeOrden()
                 http.send("opcion=eliminarItem"
                 + "&idItem="+idItem
                 );
+            }    
             }
             
 function formuFiltrosBusqueda(){

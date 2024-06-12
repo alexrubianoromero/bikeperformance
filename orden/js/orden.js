@@ -647,21 +647,26 @@ function grabarVehiculoDesdeOrden()
             function eliminarItemOrden(idItem)
             {
                 // alert (idItem);
-                const http=new XMLHttpRequest();
-                const url = '../orden/ordenes.php';
-                http.onreadystatechange = function(){
-                    if(this.readyState == 4 && this.status ==200){
-                        // var  resp = JSON.parse(this.responseText); 
-                        // alert('respuesta'+ resp.data.descripcion);
-                        document.getElementById("divPregunteNuevoItem").innerHTML = '';
-                        document.getElementById("div_items_orden").innerHTML = this.responseText;
-                    }
-                };
-                http.open("POST",url);
-                http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-                http.send("opcion=eliminarItem"
-                + "&idItem="+idItem
-                );
+                var valida = confirm('Esta seguro de eliminar este item..?');
+                if (valida)
+                {
+
+                    const http=new XMLHttpRequest();
+                    const url = '../orden/ordenes.php';
+                    http.onreadystatechange = function(){
+                        if(this.readyState == 4 && this.status ==200){
+                            // var  resp = JSON.parse(this.responseText); 
+                            // alert('respuesta'+ resp.data.descripcion);
+                            document.getElementById("divPregunteNuevoItem").innerHTML = '';
+                            document.getElementById("div_items_orden").innerHTML = this.responseText;
+                        }
+                    };
+                    http.open("POST",url);
+                    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+                    http.send("opcion=eliminarItem"
+                    + "&idItem="+idItem
+                    );
+                 } 
             }
             
 function formuFiltrosBusqueda(){
@@ -934,4 +939,80 @@ function mostrarImagenesOrden(idOrden)
     http.send("opcion=mostrarImagenesOrden"
     + "&idOrden="+idOrden
     );
+}
+
+
+function preguntarClaveEliminarItemOrden(idItem)
+{
+    // alert (idItem);
+    
+    const http=new XMLHttpRequest();
+    const url = '../orden/ordenes.php';
+    http.onreadystatechange = function(){
+        if(this.readyState == 4 && this.status ==200){
+            // var  resp = JSON.parse(this.responseText); 
+            // alert('respuesta'+ resp.data.descripcion);
+            // document.getElementById("divPregunteNuevoItem").innerHTML = '';
+            document.getElementById("divPedirConfirmacionDeEliminacion").innerHTML = this.responseText;
+        }
+    };
+    http.open("POST",url);
+    http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    http.send("opcion=preguntarClaveEliminarItemOrden"
+    + "&idItem="+idItem
+    );
+}
+
+
+function verificarClaveEliminarItemOrden(idItem)
+{
+    // alert (idItem);
+    var clave = document.getElementById("claveEliminacion").value;
+    // alert(clave);
+    if(clave == '01'){
+        
+        document.getElementById("divPedirConfirmacionDeEliminacion").innerHTML = '';
+        eliminarItemOrden(idItem);
+    }
+    else{
+        alert('Clave incorrecta');
+        document.getElementById("divPedirConfirmacionDeEliminacion").innerHTML = '';
+    }
+    // const http=new XMLHttpRequest();
+    // const url = '../orden/ordenes.php';
+    // http.onreadystatechange = function(){
+        //     if(this.readyState == 4 && this.status ==200){
+            //         // var  resp = JSON.parse(this.responseText); 
+            //         // alert('respuesta'+ resp.data.descripcion);
+            //         // document.getElementById("divPregunteNuevoItem").innerHTML = '';
+            //         document.getElementById("divPedirConfirmacionDeEliminacion").innerHTML = this.responseText;
+            //     }
+            // };
+            // http.open("POST",url);
+            // http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            // http.send("opcion=preguntarClaveEliminarItemOrden"
+            // + "&idItem="+idItem
+            // );
+}
+
+
+function muestreMenuDinero(idOrden)
+{
+            // alert (idItem);
+            
+            const http=new XMLHttpRequest();
+            const url = '../abonosClientes/abonosClientes.php';
+            http.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status ==200){
+                    // var  resp = JSON.parse(this.responseText); 
+                    // alert('respuesta'+ resp.data.descripcion);
+                    // document.getElementById("divPregunteNuevoItem").innerHTML = '';
+                    document.getElementById("cuerpoModalManejoDinero").innerHTML = this.responseText;
+                }
+            };
+            http.open("POST",url);
+            http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+            http.send("opcion=muestreMenuDinero"
+            + "&idOrden="+idOrden
+            );
 }

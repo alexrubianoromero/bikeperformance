@@ -30,6 +30,9 @@ class ayudasFinancierasVista
                     <button class = "btn btn-primary bontonesmenu"  onclick="pantallaConceptos();">CONCEPTOS DE CAJA 
                            <i class="far fa-money-bill-1"></i>
                    </button>
+                   <button class = "btn btn-primary bontonesmenu"  onclick="pantallaRecibosDeCaja();">RECIBOS DE CAJA 
+                           <i class="far fa-money-bill-1"></i>
+                   </button>
                </div>
           </div>
           

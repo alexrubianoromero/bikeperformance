@@ -132,6 +132,12 @@ class ordenControlador
         if($_REQUEST['opcion']=='mostrarImagenesOrden'){
             $this->mostrarImagenesOrden($_REQUEST);
         }
+        if($_REQUEST['opcion']=='preguntarClaveEliminarItemOrden'){
+            $this->vistaOrden->preguntarClaveEliminarItemOrden($_REQUEST['idItem']);
+        }
+        if($_REQUEST['opcion']=='muestreMenuDinero'){
+            $this->vistaOrden->muestreMenuDinero($_REQUEST['idOrden']);
+        }
        
     }
 

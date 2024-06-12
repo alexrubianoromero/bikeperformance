@@ -3,16 +3,22 @@ $raiz = dirname(dirname(dirname(__file__)));
 require_once($raiz.'/vista/vista.php');
 require_once($raiz.'/orden/modelo/OrdenesModelo.class.php');
 require_once($raiz.'/tecnicos/modelo/TecnicosModelo.php');
+require_once($raiz.'/orden/modelo/itemsOrdenModelo.php');
+
+
+
 class OrdenesVista extends vista 
 {
     protected $modelOrden;
     protected $tecnicosModelo;
+    private $itemsOrdenModelo;
 
     public function __construct()
     {
         session_start();
         $this->modelOrden = new OrdenesModelo(); 
         $this->tecnicosModelo = new TecnicosModelo();
+        $this->itemsOrdenModelo = new itemsOrdenModelo();
 
     }
   
@@ -75,6 +81,7 @@ class OrdenesVista extends vista
                <?php  $this->modalAgregarItems(); ?>
                <?php  $this->modalFiltrosCodigosNew(); ?>
                <?php  $this-> modalImagenes(); ?>
+               <?php  $this-> modalManejoDinero(); ?>
 
               
               
@@ -137,6 +144,7 @@ class OrdenesVista extends vista
         echo '<th>ORDEN</th>';
         // echo '<th>IMA</th>';
         echo '<th>PDF</th>';
+        echo '<th>$</th>';
         echo '<th>FECHA</th>';
         echo '<th>PLACA</th>';
         echo '<th>LINEA</th>';
@@ -175,10 +183,21 @@ class OrdenesVista extends vista
                 
             </button>
             </td>';
+
             echo '<td>';
- 
             echo '<a href="../orden/pdf/ordenPdf3.php?idOrden='.$orden['id'].'" target="_blank">PDF</a>';
             echo '</td>';
+
+            echo '<td>
+            <button 
+                onclick="muestreMenuDinero('.$orden['id'].');" 
+                class="btn btn-success" 
+                data-toggle="modal" data-target="#modalManejoDinero"
+                size= "6px"
+                >$
+            </button>
+            </td>';
+            
             // echo '<td>'; 
             // echo '<button 
             //         class="btn btn-default" 
@@ -424,6 +443,31 @@ class OrdenesVista extends vista
                       <h4 class="modal-title" id="myModalLabel">Informacion</h4>
                   </div>
                   <div id="cuerpoModalClientes" class="modal-body">
+                      
+                      
+                  </div>
+                  <div class="modal-footer" id="footerNuevoCliente">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                      <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+                  </div>
+                  </div>
+              </div>
+          </div>
+        <?php
+    }
+    public function modalManejoDinero (){
+        ?>
+         <!-- <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal2">
+         Launch demo modal
+         </button> -->
+          <div style="color:black;" class="modal fade" id="modalManejoDinero" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                  <div class="modal-header" id="headerNuevoCliente">
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      <h4 class="modal-title" id="myModalLabel">Control Dinero</h4>
+                  </div>
+                  <div id="cuerpoModalManejoDinero" class="modal-body">
                       
                       
                   </div>
@@ -696,6 +740,7 @@ class OrdenesVista extends vista
         <?php
 
    }
+   
    public function mostrarItemsOrden($id,$items,$estadoOrden='10',$request = []){
     // $items =  $this->itemsOrden->traerItemsOrdenId( $id,$conexion);
    // echo '<pre>';
@@ -703,6 +748,7 @@ class OrdenesVista extends vista
    // echo '</pre>';
    // die();
        ?>
+       <div id="divPedirConfirmacionDeEliminacion" style="color:black"></div>
        <table class="table table-striped">
            <thead>
 
@@ -747,14 +793,14 @@ class OrdenesVista extends vista
                     else{
                         echo '<td></td>';
                     }
-                    if($estadoOrden<2)
-                    {
-                            if($_SESSION['nivel'] >2)
-                            {
-                                echo '<td><i class="fas fa-trash" onclick = "eliminarItemOrden('.$items[$i]["id_item"].');"></i></td>';
-                            }    
-                    }
-
+                    // if($estadoOrden<2)
+                    // {
+                    //         if($_SESSION['nivel'] >2)
+                    //         {
+                    //             echo '<td><i class="fas fa-trash" onclick = "eliminarItemOrden('.$items[$i]["id_item"].');"></i></td>';
+                    //         }    
+                    // }
+                    echo '<td><i class="fas fa-trash" onclick = "preguntarClaveEliminarItemOrden('.$items[$i]["id_item"].');"></i></td>';
                     echo '</tr>';
                     $sumaItems += $items[$i]["total_item"];
                }
@@ -1242,6 +1288,49 @@ class OrdenesVista extends vista
         </div>
         <?php
     }
+
+    public function preguntarClaveEliminarItemOrden($idItem)
+    {
+        $infoItem =  $this->itemsOrdenModelo->traerInfoItemConIdItem($idItem);
+      ?>
+      <div class="row mt-3" style="color:red; border: 1px solid red; background-color:#C0C0C0;position:relative;">
+            <div>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <td>Codigo</td>
+                          
+                            <td>Descripcion</td>
+                            <td>Vr.Unit</td>
+                            <td>Cant.</td>
+                            <td>Vr.Total</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><?php  echo $infoItem['codigo'];   ?>  </td>
+                         
+                            <td><?php  echo $infoItem['descripcion'];   ?>  </td>
+                            <td><?php  echo number_format($infoItem['valor_unitario'], 0, ',', '.');   ?>  </td>
+                            <td><?php  echo $infoItem['cantidad'];   ?>  </td>
+                            <td><?php  echo number_format($infoItem['total_item'], 0, ',', '.');   ?>  </td>
+                        </tr>
+                    </tbody>        
+                </table>
+            </div>
+            <span class="col-lg-3">Digite la clave de eliminacion</span>
+            <div class="col-lg-3">
+                <input class="form-control" type="password" id="claveEliminacion" >
+            </div>
+            <div class="col-lg-6">
+                <button class="btn btn-warning" onclick="verificarClaveEliminarItemOrden(<?php  echo $idItem; ?>)">Verificar Clave Eliminacion</button>
+            </div>
+      </div>
+      <?php
+    }
+
+  
+
 
 
 }

@@ -115,69 +115,59 @@ Class OrdenesModelo extends Conexion
 
     } 
 
+    public function verificarSiExisteEstaOrden($datos)
+    {
+        $sql = "select * from ordenes 
+                where  placa = '".$datos['placa']."' 
+                and kilometraje= '".$datos['kilometraje']."' 
+                and observaciones = '".$datos['descripcion']."'    
+            "; 
+        // die($sql);     
+        $consulta = mysql_query($sql,$this->connectMysql()); 
+         $filas = mysql_num_rows($consulta);    
+         return $filas; 
+    }
     
-
-    public function grabarOrden($conexion,$datos){
-
-        $datosEmpresa = $this->traerDatosEmpresa($conexion);
-
-        $id_empresa = $datosEmpresa['id_empresa'];
-
-        $numeroActual = $this->traerNumeroOrdenActual($conexion);
-
-        $siguienteNumero =  $numeroActual + 1;
-
-        // echo '<br>'.$siguienteNumero;
-
-        // die(); 
-
-        $sql = "insert into ordenes
-
-        (orden,placa,fecha,observaciones,id_empresa,estado,kilometraje,mecanico,tipo_orden,
-
-        tipo_medida_kms_millas_horas) 
-
-        values (
-
+    public function grabarOrden($conexion,$datos)
+    {
+        $yaexiste = $this->verificarSiExisteEstaOrden($datos); 
+        if($yaexiste == 0)
+        {
+            $datosEmpresa = $this->traerDatosEmpresa($conexion);
+            $id_empresa = $datosEmpresa['id_empresa'];
+            $numeroActual = $this->traerNumeroOrdenActual($conexion);
+            $siguienteNumero =  $numeroActual + 1;
+            // echo '<br>'.$siguienteNumero;
+            // die(); 
+            $sql = "insert into ordenes
+            (orden,placa,fecha,observaciones,id_empresa,estado,kilometraje,mecanico,tipo_orden,
+            tipo_medida_kms_millas_horas) 
+            values (
             '".$siguienteNumero."',
-
             '".$datos['placa']."',
-
             now(),
-
             '".$datos['descripcion']."',
-
             '".$id_empresa."',
-
             '0',
-
             '".$datos['kilometraje']."',
-
             '".$datos['mecanico']."',
-
             '1',
-
             '".$datos['tipo_medida']."'
-
             )";
-
             // echo '<br>'.$sql;
-
             // die();
-
             $consulta = mysql_query($sql,$conexion);    
-
             $this->actualizarContadorOrdenes($conexion,$siguienteNumero);  
-
             return $siguienteNumero; 
-
         }
+            
+    }
+        
 
-
-
+        
     public function traerEmailCLiente($placa,$conexion){
-
-          $sql  = "SELECT  cli.email as email FROM  carros ca 
+        
+        $sql  = "SELECT  cli.email as email FROM  carros ca 
                    INNER JOIN cliente0 cli ON  cli.idcliente = ca.propietario ";
           $consulta = mysql_query($sql,$conexion);
           $arreglo = mysql_fetch_assoc($consulta);

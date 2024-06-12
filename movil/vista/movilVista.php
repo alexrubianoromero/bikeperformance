@@ -81,6 +81,7 @@ class movilVista{
     <script src="../ayudas_financieras/js/conceptos.js"></script>
     <script src="../ventas/js/ventas.js"></script>
     <script src="../cambiosdeaceite/js/cambiosdeaceite.js"></script>
+    <script src="../abonosClientes/js/abonosClientes.js"></script>
     <?php
   }
   public function htmlLogueo(){
